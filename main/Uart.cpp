@@ -6,6 +6,8 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/uart.h"
@@ -14,7 +16,12 @@
 
 #include "Uart.h"
 
-
+/*
+ * @brief	Uart initialization.
+ * @param	baud rate, data bits, parity, stop bits and flow control. See driver/uart.h.
+ *
+ * @retval None.
+ */
 Uart::Uart(int baud_rate, uart_word_length_t data_bits,
 		uart_parity_t parity, uart_stop_bits_t stop_bits,
 		uart_hw_flowcontrol_t flow_cotrol){
@@ -34,3 +41,16 @@ Uart::Uart(int baud_rate, uart_word_length_t data_bits,
 
 }
 
+/*
+ * @brief	ReadBytes from UART device. Block until bytes_to_read is received
+ * @param	data: pointer to store data
+ * 			bytes_to_read: wait until n bytes is received
+ *
+ * @retval number of bytes received.
+ */
+int Uart::ReadBytes(uint8_t *data, uint32_t bytes_to_read){
+
+	int len = uart_read_bytes(UART_PORT_NUM, data, bytes_to_read, portMAX_DELAY / portTICK_RATE_MS);
+
+	return len;
+}

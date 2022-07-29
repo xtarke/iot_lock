@@ -16,9 +16,14 @@ public:
 			uart_parity_t parity, uart_stop_bits_t stop_bits,
 			uart_hw_flowcontrol_t flow_cotrol);
 
+	int WaitAndRead();
+
+	void Print();
 
 private:
-	//vitual
+
+	uint8_t data[64];
+
 };
 
 #endif /* MAIN_RDM6300_H_ */
