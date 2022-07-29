@@ -35,7 +35,10 @@ extern "C" void app_main(void)
 	Rdm6300 teste(9600,UART_DATA_8_BITS,UART_PARITY_DISABLE,UART_STOP_BITS_1, UART_HW_FLOWCTRL_DISABLE);
 
 
-
+	while (1){
+		teste.WaitAndRead();
+		teste.Print();
+	}
 
 
 }
