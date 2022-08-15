@@ -22,7 +22,12 @@ public:
 
 private:
 
-	uint8_t data[64];
+	uint8_t checksum;
+	uint8_t msg_checkum;
+	uint32_t tag;
+
+	bool check_checksum();
+	uint8_t data[14];
 
 };
 
