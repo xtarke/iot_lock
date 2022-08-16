@@ -8,8 +8,6 @@
 #include <string.h>
 
 #include "esp_log.h"
-
-
 #include "Rdm6300.h"
 
 
@@ -29,6 +27,7 @@ Rdm6300::Rdm6300(int baud_rate, uart_word_length_t data_bits,
 	checksum = 0;
 	msg_checkum = 0;
 	tag = 0;
+	last_tag_time = GetTime();
 }
 
 /*
@@ -37,13 +36,19 @@ Rdm6300::Rdm6300(int baud_rate, uart_word_length_t data_bits,
  *
  * @retval number of bytes received.
  */
-int Rdm6300::WaitAndRead(void){
+uint32_t Rdm6300::WaitAndRead(void){
 
 	int len = 0;
+	uint32_t my_time;
+	data[0] = 0;
 
-	len = Rdm6300::ReadBytes(data, 14);
+	/* Sync and flush until package is sync */
+	while (data[0] != 0x02)
+		len = Rdm6300::ReadBytes(data, 14);
 
+#ifdef DEBUG
 	Print();
+#endif
 
 	/* Incorrect number of bytes */
 	if (len != 14)
@@ -54,18 +59,27 @@ int Rdm6300::WaitAndRead(void){
 	/* Invalid tail */
 	else if (data[13] != 0x03)
 		return -1;
-	//else if (check_checksum() == false)
-	//	return -1;
+	else if (check_checksum() == false)
+		return -1;
 
-	check_checksum();
+	my_time = GetTime();
+
+	if (my_time  <  last_tag_time + idle_ticks){
+#ifdef DEBUG
+		ESP_LOGI("Rdm6300::", "%d   %d", my_time, last_tag_time + idle_ticks);
+#endif
+		return -1;
+	}
+
+	Rdm6300::last_tag_time = my_time;
 
 	/* Add string termination character */
-	data[11] = 0x00;
+	Rdm6300::data[11] = 0x00;
 
 	/* Convert tag. Ignore version: 2 chars after head */
-	tag = strtol((char *)data + 3, NULL, 16);
+	Rdm6300::tag = strtol((char *)data + 3, NULL, 16);
 
-	ESP_LOGI("Rdm6300::", "tag = %d  msg_checksum = %x  cal_checksum = %x", tag, msg_checkum, checksum);
+	ESP_LOGI("Rdm6300::", "tag = %d  msg_checksum = %x  cal_checksum = %x  time: %d", tag, msg_checkum, checksum, my_time);
 	ESP_LOGI("Rdm6300::", "-------------------------");
 
 	return Rdm6300::tag;
@@ -87,8 +101,9 @@ bool Rdm6300::check_checksum(){
 	/* Data check sum */
 	byte[0] = data[11];
 	byte[1] = data[12];
-	msg_checkum = strtol((char *)byte, NULL, 16);
+	Rdm6300::msg_checkum = strtol((char *)byte, NULL, 16);
 
+	Rdm6300::checksum = 0;
 	/* Calc checksum */
 	for (int i=1; i < 11; i+=2){
 		byte[0] = data[i];
@@ -97,7 +112,11 @@ bool Rdm6300::check_checksum(){
 
 		uint8_t val = strtol((char *)byte, NULL, 16);
 
-		checksum ^= val;
+#ifdef DEBUG
+		ESP_LOGI("Rdm6300::", "byte[%d] = %x", i, val);
+#endif
+
+		Rdm6300::checksum ^= val;
 	}
 
 	if (checksum == msg_checkum)
