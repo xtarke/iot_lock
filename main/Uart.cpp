@@ -50,9 +50,11 @@ Uart::Uart(int baud_rate, uart_word_length_t data_bits,
  */
 int Uart::ReadBytes(uint8_t *data, uint32_t bytes_to_read){
 
-	//uart_flush(UART_PORT_NUM);
 	int len = uart_read_bytes(UART_PORT_NUM, data, bytes_to_read, portMAX_DELAY / portTICK_RATE_MS);
 
-
 	return len;
+}
+
+void Uart::flush(){
+	uart_flush(UART_PORT_NUM);
 }

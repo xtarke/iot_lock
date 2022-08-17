@@ -19,6 +19,7 @@ public:
 
 protected:
 	int ReadBytes(uint8_t *data, uint32_t bytes_to_read);
+	void flush();
 
 private:
 	enum {UART_PORT_NUM = 2, RXD_PIN = 16, TXD_PIN = 17, BUFFER_SIZE = 1024};
