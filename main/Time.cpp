@@ -22,3 +22,7 @@ uint32_t Time::GetTime(){
 
 	return (uint32_t)ticks ;
 }
+
+void Time::Suspend(uint32_t ticks){
+	vTaskDelay(ticks);
+}

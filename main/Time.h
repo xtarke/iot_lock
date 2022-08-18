@@ -15,6 +15,7 @@ public:
 	Time();
 
 	uint32_t GetTime();
+	void Suspend(uint32_t ticks);
 
 };
 
