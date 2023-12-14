@@ -29,7 +29,7 @@ extern "C" void app_main(void)
 	}
 	ESP_ERROR_CHECK(ret);
 
-	// Wifi::Init();
+	Wifi::Init();
 
 
 	Rdm6300 teste(9600,UART_DATA_8_BITS,UART_PARITY_DISABLE,UART_STOP_BITS_1, UART_HW_FLOWCTRL_DISABLE);
