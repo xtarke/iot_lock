@@ -64,7 +64,7 @@ uint32_t Rdm6300::WaitAndRead(void){
 	/* Convert tag. Ignore version: 2 chars after head */
 	Rdm6300::tag  = strtol((char *)data + head_index + 3, NULL, 16);
 
-	ESP_LOGI("Rdm6300::", "tag = %d  msg_checksum = %x  cal_checksum = %x  time: %d", tag, msg_checkum, checksum, my_time);
+	ESP_LOGI("Rdm6300::", "tag = %lu  msg_checksum = %x  cal_checksum = %x  time: %lu", tag, msg_checkum, checksum, my_time);
 
 	/* Should suspend since Rdm6300 keep sending data while a tag is next to it */
 	Time::Suspend(idle_ticks);

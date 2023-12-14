@@ -33,6 +33,7 @@ Uart::Uart(int baud_rate, uart_word_length_t data_bits,
 	uart_config.parity = parity;
 	uart_config.stop_bits = stop_bits;
 	uart_config.flow_ctrl = flow_cotrol;
+	uart_config.rx_flow_ctrl_thresh = 122;
 	uart_config.source_clk = UART_SCLK_APB;
 
 	ESP_ERROR_CHECK(uart_driver_install(UART_PORT_NUM, BUFFER_SIZE * 2, 0, 0, NULL, ESP_INTR_FLAG_IRAM));
@@ -50,7 +51,7 @@ Uart::Uart(int baud_rate, uart_word_length_t data_bits,
  */
 int Uart::ReadBytes(uint8_t *data, uint32_t bytes_to_read){
 
-	int len = uart_read_bytes(UART_PORT_NUM, data, bytes_to_read, portMAX_DELAY / portTICK_RATE_MS);
+	int len = uart_read_bytes(UART_PORT_NUM, data, bytes_to_read, portMAX_DELAY / portTICK_PERIOD_MS);
 
 	return len;
 }
