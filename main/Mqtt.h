@@ -8,6 +8,7 @@
 #ifndef MAIN_MQTT_H_
 #define MAIN_MQTT_H_
 
+extern "C" void mqtt5_init(void);
 
 #ifdef __cplusplus // only actually define the class if this is C++
 
@@ -16,6 +17,7 @@ namespace Mqtt {
 	};
 
 #endif
+
 
 
 #ifdef __cplusplus
