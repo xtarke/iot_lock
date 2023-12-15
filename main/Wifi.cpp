@@ -59,7 +59,6 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
 		s_retry_num = 0;
 		xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
 	}
-
 }
 
 /*
