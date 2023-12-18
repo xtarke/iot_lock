@@ -255,7 +255,6 @@ static void mqtt5_app_start(void)
 	};
 
 	esp_mqtt_client_config_t mqtt5_cfg = {
-			//.broker.address.uri = "mqtts://5a5cb74b701c4a2fa1c5b11b0ebf817b.s1.eu.hivemq.cloud",
 			.broker.address.uri = CONFIG_BROKER_URL,
 			.broker.address.port = 8883,
 			.session.protocol_ver = MQTT_PROTOCOL_V_5,
