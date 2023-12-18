@@ -1,6 +1,6 @@
 #
 # Automatically generated file. DO NOT EDIT.
-# Espressif IoT Development Framework (ESP-IDF) 5.1.2 Project Configuration
+# Espressif IoT Development Framework (ESP-IDF)  Project Configuration
 #
 CONFIG_SOC_BROWNOUT_RESET_SUPPORTED="Not determined"
 CONFIG_SOC_TWAI_BRP_DIV_SUPPORTED="Not determined"
@@ -342,12 +342,12 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # WifiConfiguration
 #
-CONFIG_ESP_WIFI_SSID="XLAN_2.4G"
-CONFIG_ESP_WIFI_PASSWORD="4F7B39F0"
+CONFIG_ESP_WIFI_SSID="ssid"
+CONFIG_ESP_WIFI_PASSWORD="wifi_pass"
 CONFIG_ESP_MAXIMUM_RETRY=5
-CONFIG_BROKER_URL="mqtts://5a5cb74b701c4a2fa1c5b11b0ebf817b.s1.eu.hivemq.cloud"
-CONFIG_BROKER_USER="lpae_lab"
-CONFIG_BROKER_PASSWORD="nci8rS5)e4"
+CONFIG_BROKER_URL="mqtt://mqtt.eclipseprojects.io"
+CONFIG_BROKER_USER="user"
+CONFIG_BROKER_PASSWORD="passwor"
 # end of WifiConfiguration
 
 #
