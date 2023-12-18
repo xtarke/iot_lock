@@ -23,7 +23,7 @@ menu "WifiConfiguration"
         default "mqtt://mqtt.eclipseprojects.io"
         help
             URL of the broker to connect to
-            
+
     config BROKER_USER
         string "Broker user"
         default "user"
@@ -35,4 +35,5 @@ menu "WifiConfiguration"
         default "password"
         help
             password of the broker to connect to
+
 endmenu
