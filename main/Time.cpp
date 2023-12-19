@@ -1,8 +1,15 @@
-/*
- * Time.cpp
+/* Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Aug 16, 2022
- *      Author: Renan Augusto Starke
+ * This file is part of project "IoT Lock".
+ * 
+ */
+
+/**
+ * @file Time.cpp
+ * @author Renan Augusto Starke
+ * @date 16 Aug 2022
+ * @brief File containing Time class implementation.
+ *
  */
 
 #include "freertos/FreeRTOS.h"
@@ -10,12 +17,20 @@
 
 #include "Time.h"
 
+/**
+ * @brief Construct a new Time:: Time object
+ * 
+ */
+
 Time::Time() {
-	// TODO Auto-generated constructor stub
 
 }
 
-
+/**
+ * @brief Return ticks from FreeRTOS. Calls SDK "get ticks" function.
+ * 
+ * @return uint32_t Ticks.
+ */
 uint32_t Time::GetTime(){
 
 	TickType_t ticks = xTaskGetTickCount();
@@ -23,6 +38,11 @@ uint32_t Time::GetTime(){
 	return (uint32_t)ticks ;
 }
 
+/**
+ * @brief Suspend task. Calls SDK delay function.
+ * 
+ * @param ticks 
+ */
 void Time::Suspend(uint32_t ticks){
 	vTaskDelay(ticks);
 }

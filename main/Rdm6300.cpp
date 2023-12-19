@@ -1,17 +1,23 @@
-/*
- * Rdm6300.cpp
+/* Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Jul 28, 2022
- *      Author: Renan Augusto Starke
+ * This file is part of project "IoT Lock".
+ * 
+ */
+
+/**
+ * @file Rdm6300.cpp
+ * @author Renan Augusto Starke
+ * @date 28 Jul 2022
+ * @brief File containing Rdm6300 class implementation.
+ *
  */
 
 #include <string.h>
-
 #include "esp_log.h"
 #include "Rdm6300.h"
 
 /*
- * @brief	Rdm6300 initialization.
+ * @brief	Construct a new Rdm6300::Rdm6300 object Rdm6300.
  * @param	Baud rate, data bits, parity, stop bits and flow control. See driver/uart.h.
  *
  * @retval None.
@@ -73,13 +79,22 @@ uint32_t Rdm6300::WaitAndRead(void){
 }
 
 
-
+/**
+ * @brief Print received data from Rdm6300.
+ * 
+ */
 void Rdm6300::Print(void){
 	for (int i=0; i < sizeof(data);i++)
 		ESP_LOGI("Rdm6300::", "data[%d] = %d", i, Rdm6300::data[i]);
 }
 
-
+/**
+ * @brief Check checksum.
+ * 
+ * @param index 
+ * @return true 
+ * @return false 
+ */
 bool Rdm6300::check_checksum(int index){
 	char byte[3] = {0};
 

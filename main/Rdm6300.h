@@ -1,8 +1,16 @@
 /*
- * Rdm6300.h
+ * Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Jul 28, 2022
- *      Author: Renan Augusto Starke
+ * This file is part of project "IoT Lock".
+ * 
+ */
+
+/**
+ * @file Rdm6300.h
+ * @author Renan Augusto Starke
+ * @date 28 Jul 2023
+ * @brief File containing Rdm6300 class definiton.
+ *
  */
 
 #ifndef MAIN_RDM6300_H_

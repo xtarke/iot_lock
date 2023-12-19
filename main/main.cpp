@@ -1,9 +1,18 @@
-/* WiFi iot door lock
+/*
+ * Copyright (c) 2023 Renan Augusto Starke
+ *
+ * This file is part of project "IoT Lock".
+ * 
+ */
 
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-   */
+/**
+ * @file main.cpp
+ * @author Renan Augusto Starke
+ * @date 28 Jul 2022
+ * @brief  File containing main function (FreeRTOS main thread)
+ *
+ */
+
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -21,9 +30,15 @@
 #include "Rdm6300.h"
 #include "Tags.h"
 
+/**
+ * @brief Main function (main FreeRTOS thread). Initialize hardware and runs the main loop.
+ * 
+ * @return None 
+ */
+
 extern "C" void app_main(void)
 {
-	//Initialize NVS
+	/* Initialize NVS */
 	esp_err_t ret = nvs_flash_init();
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
 		ESP_ERROR_CHECK(nvs_flash_erase());
@@ -31,19 +46,24 @@ extern "C" void app_main(void)
 	}
 	ESP_ERROR_CHECK(ret);
 
+	/* Initialize WiFi and MQTT5*/
 	Wifi::Init();
 	mqtt5_init();
 
+	/* RFID storage class */
 	Tags tags_storage;
+	/* RFID sensor class */
 	Rdm6300 tag_sensor(9600,UART_DATA_8_BITS,UART_PARITY_DISABLE,UART_STOP_BITS_1, UART_HW_FLOWCTRL_DISABLE);
 
 	while (1){
+		/* Wait for a new tag */
 		uint32_t tag = tag_sensor.WaitAndRead();
 
+		/* Check if a read tag is in permissive list */
 		if ((tag != 0) && (tags_storage.search(tag) != -1))
 			ESP_LOGI("Main::", "Open door for: %lu", tag);
 
+		//ToDo: Actually needs to open a door
+
 	}
-
-
 }

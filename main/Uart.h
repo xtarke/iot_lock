@@ -1,8 +1,16 @@
 /*
- * Uart.h
+ * Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Jul 28, 2022
- *      Author: Renan Augusto Starke
+ * This file is part of project "IoT Lock".
+ * 
+ */
+
+/**
+ * @file Uart.h
+ * @author Renan Augusto Starke
+ * @date 19 Jul 2022
+ * @brief File containing UART class definiton.
+ *
  */
 
 #ifndef MAIN_UART_H_
@@ -23,8 +31,6 @@ protected:
 
 private:
 	enum {UART_PORT_NUM = 2, RXD_PIN = 16, TXD_PIN = 17, BUFFER_SIZE = 1024};
-
-
 
 };
 

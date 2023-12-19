@@ -1,14 +1,20 @@
 /*
- * Mqtt.h
+ * Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Dec 14, 2023
- *      Author: xtarke
+ * This file is part of project "IoT Lock".
+ * 
+ */
+
+/**
+ * @file Mqtt.h
+ * @author Renan Augusto Starke
+ * @date 14 Dec 2022
+ * @brief File containing Mqtt namespace definitions.
+ *
  */
 
 #ifndef MAIN_MQTT_H_
 #define MAIN_MQTT_H_
-
-extern "C" void mqtt5_init(void);
 
 #ifdef __cplusplus // only actually define the class if this is C++
 
@@ -17,8 +23,6 @@ namespace Mqtt {
 	};
 
 #endif
-
-
 
 #ifdef __cplusplus
     #define EXPORT_C extern "C"

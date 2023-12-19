@@ -1,8 +1,16 @@
 /*
- * Uart.cpp
+ * Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Jul 28, 2022
- *      Author: Renan Augusto Starke
+ * This file is part of project "IoT Lock".
+ * 
+ */
+
+/**
+ * @file Uart.cpp
+ * @author Renan Augusto Starke
+ * @date 28 Jul 2022
+ * @brief  File containing UART functions.
+ *
  */
 
 #include <stdio.h>
@@ -16,12 +24,17 @@
 
 #include "Uart.h"
 
-/*
- * @brief	Uart initialization.
- * @param	baud rate, data bits, parity, stop bits and flow control. See driver/uart.h.
- *
- * @retval None.
+
+/**
+ * @brief Construct a new Uart object. See SDK driver/uart.h.
+ * 
+ * @param baud_rate Uart baud rate.
+ * @param data_bits Uart data bits.
+ * @param parity  Uart parity.
+ * @param stop_bits Uart stop bits.
+ * @param flow_cotrol Uart flow control.
  */
+
 Uart::Uart(int baud_rate, uart_word_length_t data_bits,
 		uart_parity_t parity, uart_stop_bits_t stop_bits,
 		uart_hw_flowcontrol_t flow_cotrol){
@@ -56,6 +69,12 @@ int Uart::ReadBytes(uint8_t *data, uint32_t bytes_to_read){
 	return len;
 }
 
+/*
+ * @brief Uart flush. Calls sdk flush function.
+ * @param None
+ * 
+ * @retval None.
+ */
 void Uart::flush(){
 	uart_flush(UART_PORT_NUM);
 }

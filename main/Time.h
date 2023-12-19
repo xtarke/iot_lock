@@ -1,8 +1,16 @@
 /*
- * Time.h
+ * Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Aug 16, 2022
- *      Author: Renan Augusto Starke
+ * This file is part of project "IoT Lock".
+ * 
+ */
+
+/**
+ * @file Time.h
+ * @author Renan Augusto Starke
+ * @date 16 Aug 2022
+ * @brief File containing Time class definiton.
+ *
  */
 
 #ifndef MAIN_TIME_H_

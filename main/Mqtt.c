@@ -1,12 +1,16 @@
-/*
- * Mqtt.cpp
+/* Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Dec 14, 2023
- *      Author: xtarke
+ * This file is part of project "IoT Lock".
+ * 
  */
 
-
-
+/**
+ * @file Mqtt.cp
+ * @author Renan Augusto Starke
+ * @date 14 DEc 2023
+ * @brief File containing Mqtt C functions. Based on MQQT5 SDK example.
+ *
+ */
 
 #include <stdio.h>
 #include <stdint.h>
@@ -19,14 +23,17 @@
 #include "esp_log.h"
 #include "mqtt_client.h"
 
-//#include "Mqtt.h"
 
 static const char *TAG = "MQTT5_EXAMPLE";
 
-
+/* Queue to stored received tasg */
 static QueueHandle_t subscribe_queue;
 
-
+/**
+ * @brief Get the tag received from MQTT. Blocks until a new tag is received.
+ * 
+ * @return uint32_t Tag number.
+ */
 uint32_t get_added_tag(){
 
 	uint32_t tag = -1;
@@ -136,34 +143,13 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 		esp_mqtt5_client_set_user_property(&publish_property.user_property, user_property_arr, USE_PROPERTY_ARR_SIZE);
 		esp_mqtt5_client_set_publish_property(client, &publish_property);
 
-		//        msg_id = esp_mqtt_client_publish(client, "/topic/qos1", "data_3", 0, 1, 1);
-		//        esp_mqtt5_client_delete_user_property(publish_property.user_property);
-		//        publish_property.user_property = NULL;
-		//        ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
-
+			/* Subscribe to broker topic to add or remove permissible tags */
 		esp_mqtt5_client_set_user_property(&subscribe_property.user_property, user_property_arr, USE_PROPERTY_ARR_SIZE);
 		esp_mqtt5_client_set_subscribe_property(client, &subscribe_property);
 		msg_id = esp_mqtt_client_subscribe(client, "/lpae/add_tag", 0);
 		esp_mqtt5_client_delete_user_property(subscribe_property.user_property);
 		subscribe_property.user_property = NULL;
 		ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
-
-		//        esp_mqtt5_client_set_user_property(&subscribe1_property.user_property, user_property_arr, USE_PROPERTY_ARR_SIZE);
-		//        esp_mqtt5_client_set_subscribe_property(client, &subscribe1_property);
-		//        msg_id = esp_mqtt_client_subscribe(client, "/topic/qos1", 2);
-		//        esp_mqtt5_client_delete_user_property(subscribe1_property.user_property);
-		//        subscribe1_property.user_property = NULL;
-		//        ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
-
-		//        esp_mqtt5_client_set_user_property(&unsubscribe_property.user_property, user_property_arr, USE_PROPERTY_ARR_SIZE);
-		//        esp_mqtt5_client_set_unsubscribe_property(client, &unsubscribe_property);
-		//        msg_id = esp_mqtt_client_unsubscribe(client, "/topic/qos0");
-		//        ESP_LOGI(TAG, "sent unsubscribe successful, msg_id=%d", msg_id);
-		//        esp_mqtt5_client_delete_user_property(unsubscribe_property.user_property);
-		//        unsubscribe_property.user_property = NULL;
-
-
-
 		break;
 
 
@@ -175,14 +161,11 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 		break;
 	case MQTT_EVENT_SUBSCRIBED:
 		ESP_LOGI(TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
-
-		//        print_user_property(event->property->user_property);
-		//        esp_mqtt5_client_set_publish_property(client, &publish_property);
-		//        msg_id = esp_mqtt_client_publish(client, "/topic/qos0", "data", 0, 0, 0);
-		//        ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
+		//print_user_property(event->property->user_property);
+		//esp_mqtt5_client_set_publish_property(client, &publish_property);
+		//msg_id = esp_mqtt_client_publish(client, "/topic/qos0", "data", 0, 0, 0);
+		//ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
 		break;
-
-
 
 	case MQTT_EVENT_UNSUBSCRIBED:
 		ESP_LOGI(TAG, "MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
@@ -201,24 +184,22 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 		break;
 
 	case MQTT_EVENT_DATA:
-//		ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-//		print_user_property(event->property->user_property);
-//		ESP_LOGI(TAG, "payload_format_indicator is %d", event->property->payload_format_indicator);
-//		ESP_LOGI(TAG, "response_topic is %.*s", event->property->response_topic_len, event->property->response_topic);
-//		ESP_LOGI(TAG, "correlation_data is %.*s", event->property->correlation_data_len, event->property->correlation_data);
-//		ESP_LOGI(TAG, "content_type is %.*s", event->property->content_type_len, event->property->content_type);
-//		ESP_LOGI(TAG, "TOPIC=%.*s", event->topic_len, event->topic);
-//		ESP_LOGI(TAG, "DATA=%.*s", event->data_len, event->data);
+		//ESP_LOGI(TAG, "MQTT_EVENT_DATA");
+		//print_user_property(event->property->user_property);
+		//ESP_LOGI(TAG, "payload_format_indicator is %d", event->property->payload_format_indicator);
+		//ESP_LOGI(TAG, "response_topic is %.*s", event->property->response_topic_len, event->property->response_topic);
+		//ESP_LOGI(TAG, "correlation_data is %.*s", event->property->correlation_data_len, event->property->correlation_data);
+		//ESP_LOGI(TAG, "content_type is %.*s", event->property->content_type_len, event->property->content_type);
+		//ESP_LOGI(TAG, "TOPIC=%.*s", event->topic_len, event->topic);
+		//ESP_LOGI(TAG, "DATA=%.*s", event->data_len, event->data);
 
-
-
+		/* Convert a tag to int and enqueue it  */
 		uint32_t tag = atoi(event->data);
 		xQueueSend( subscribe_queue, (void *) &tag, ( TickType_t ) 0 );
-
+		/* Reset string buffer to avoid string overlapping */
 		memset(event->data, 0, event->data_len);
 
 		break;
-
 
 	case MQTT_EVENT_ERROR:
 		ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
@@ -237,6 +218,10 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 	}
 }
 
+/**
+ * @brief Start MQQT5 protocol.
+ * 
+ */
 static void mqtt5_app_start(void)
 {
 	esp_mqtt5_connection_property_config_t connect_property = {
@@ -286,6 +271,10 @@ static void mqtt5_app_start(void)
 	esp_mqtt_client_start(client);
 }
 
+/**
+ * @brief Initialize MQTT5 Protocol. Broker setting come from SDK config.
+ * 
+ */
 void mqtt5_init(void)
 {
 
@@ -301,7 +290,7 @@ void mqtt5_init(void)
 	esp_log_level_set("TRANSPORT", ESP_LOG_VERBOSE);
 	esp_log_level_set("OUTBOX", ESP_LOG_VERBOSE);
 
-
+	/* Create a Queue to store received tag number */
 	subscribe_queue = xQueueCreate(10, sizeof( uint32_t ));
 
 	//ESP_ERROR_CHECK(nvs_flash_init());

@@ -1,8 +1,16 @@
 /*
- * Tasg.h
+ * Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Dec 18, 2023
- *      Author: xtarke
+ * This file is part of project "IoT Lock".
+ * 
+ */
+
+/**
+ * @file Uart.h
+ * @author Renan Augusto Starke
+ * @date 18 Dec 2023
+ * @brief File containing Tags class definiton.
+ *
  */
 
 #ifndef MAIN_TAGS_H_
@@ -35,10 +43,7 @@ private:
 
 	SemaphoreHandle_t xSemaphore_tags;
 
-
-
 protected:
-
 
 
 };

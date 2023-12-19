@@ -1,12 +1,18 @@
-
 /*
- * Wifi.hpp
+ * Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Jul 19, 2022
- *      Author: Renan Augusto Starke
- *
- *      Instituto Federal de Santa Catarina
+ * This file is part of project "IoT Lock".
+ * 
  */
+
+/**
+ * @file Wifi.h
+ * @author Renan Augusto Starke
+ * @date 19 Jul 2022
+ * @brief File containing Wifi namespace definition.
+ *
+ */
+
 #ifndef _WIFI_H
 #define _WIFI_H
 

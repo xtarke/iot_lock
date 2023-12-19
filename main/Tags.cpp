@@ -1,10 +1,16 @@
-/*
- * Tags.cpp
+/* Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Dec 18, 2023
- *      Author: xtarke
+ * This file is part of project "IoT Lock".
+ * 
  */
 
+/**
+ * @file Tags.cpp
+ * @author Renan Augusto Starke
+ * @date 18 Dec 2023
+ * @brief File containing Tag class implementation.
+ *
+ */
 #include "Tags.h"
 
 #include <stdio.h>
@@ -23,24 +29,33 @@
 
 #define STORAGE_NAMESPACE "taqs_storage"
 
-
+/**
+ * @brief Tags task. Waits until MQTT receives a tag configuration.
+ * 
+ * @param param Pointer of a instance of Tag class.
+ */
 void tags_task(void *param) {
 
+	/* Get class pointer */
 	Tags *p = (Tags *)param;
 
+	/* Debug: print stored permissive tags */
 	p->print();
 
 	while (1){
 		/* Block until a new tag is received from mqtt */
 		uint32_t tag = get_added_tag();
 
-		/* Add, or delete from NVS storage */
+		/* Add or delete from NVS storage */
 		p->add_new(tag);
-		ESP_LOGI("Tags::", "MQTT add new tag: %lu", tag);
+		ESP_LOGI("Tags::", "MQTT received new tag: %lu", tag);
 	}
 }
 
-
+/**
+ * @brief Construct a new Tags::Tags object. Read NVS table of stored tags.
+ * 
+ */
 Tags::Tags(){
 
 	nvs_handle_t my_handle;
@@ -95,6 +110,12 @@ Tags::Tags(){
 	xTaskCreate(tags_task, "tags_task", 4096, p, 10, NULL);
 }
 
+/**
+ * @brief Add or delete a tag. Remove a tag if it already exists.
+ * 
+ * @param tag Tag number.
+ * @return int ESP_FAIL on error or ESP_OK on success
+ */
 int Tags::add_new(uint32_t tag){
 
 	nvs_handle_t my_handle;
@@ -123,7 +144,7 @@ int Tags::add_new(uint32_t tag){
 	xSemaphoreGive(xSemaphore_tags);
 
 
-	/* Commit to NVS storage */
+	/* Open, read and commit to NVS storage */
 	err = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &my_handle);
 
 	if (err != ESP_OK){
@@ -142,11 +163,14 @@ int Tags::add_new(uint32_t tag){
 
 	nvs_close(my_handle);
 
-
-
 	return ESP_OK;
 }
 
+/**
+ * @brief Returns a free storage space for a new tag.
+ * 
+ * @return int32_t Array index of the available storage.
+ */
 int32_t Tags::find_space(){
 
 	for (int i=0;i < Tags::MAX_TAGS; i++)
@@ -156,7 +180,12 @@ int32_t Tags::find_space(){
 	return -1;
 }
 
-
+/**
+ * @brief Search for a tag.
+ * 
+ * @param tag Tag to search for.
+ * @return int32_t Array index of the searched tag or -1 when not found.
+ */
 int32_t Tags::search(uint32_t tag){
 
 	int32_t ret = -1;
@@ -174,6 +203,10 @@ int32_t Tags::search(uint32_t tag){
 	return ret;
 }
 
+/**
+ * @brief Print all stored permissive tags.
+ * 
+ */
 void Tags::print(){
 
 	for (int i=0; i < Tags::MAX_TAGS; i++)

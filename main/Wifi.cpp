@@ -1,12 +1,17 @@
 /*
- * Wifi.cpp
+ * Copyright (c) 2023 Renan Augusto Starke
  *
- *  Created on: Jul 19, 2022
- *      Author: Renan Augusto Starke
- *
- *      Instituto Federal de Santa Catarina
+ * This file is part of project "IoT Lock".
+ * 
  */
 
+/**
+ * @file Wifi.cpp
+ * @author Renan Augusto Starke
+ * @date 19 Jul 2022
+ * @brief  File containing Wifi connection functions.
+ *
+ */
 
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -32,8 +37,8 @@ static EventGroupHandle_t s_wifi_event_group;
 static int s_retry_num;
 
 /*
- * @brief  Wifi event hadler.
- * @param	See esp-idf
+ * @brief Wifi event hadler.
+ * @param See esp-idf
  *
  * @retval None.
  */
