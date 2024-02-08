@@ -4,5 +4,6 @@ idf_component_register(SRCS "main.cpp"
 							"Rdm6300.cpp"
 							"Time.cpp"
 							"Tags.cpp"
+							"Door.cpp"
 							"Mqtt.c"
                     INCLUDE_DIRS ".")

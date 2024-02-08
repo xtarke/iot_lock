@@ -17,9 +17,11 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
+#include "freertos/queue.h"
 #include "esp_system.h"
 #include "nvs_flash.h"
 #include "esp_log.h"
+#include "driver/gpio.h"
 
 #include "lwip/err.h"
 #include "lwip/sys.h"
@@ -29,6 +31,45 @@
 
 #include "Rdm6300.h"
 #include "Tags.h"
+#include "Door.h"
+
+
+
+static void door_button_task(void* arg)
+{
+
+	Door *my_door = (Door *)arg;
+
+	gpio_reset_pin(GPIO_NUM_23);
+	/* Set the GPIO as a push/pull output */
+	gpio_set_direction(GPIO_NUM_23, GPIO_MODE_INPUT);
+	gpio_set_pull_mode(GPIO_NUM_23, GPIO_PULLUP_ONLY);
+	gpio_pullup_en(GPIO_NUM_23);
+
+	int level = 0;
+
+	TickType_t currentTime;
+	TickType_t openedTime = 0;
+
+    for(;;) {
+    	level = gpio_get_level(GPIO_NUM_23);
+    	vTaskDelay(700 /  portTICK_PERIOD_MS);
+
+    	/* Get the time in MS. */
+		TickType_t currentTime = pdTICKS_TO_MS( xTaskGetTickCount() );
+
+    	if (level){
+
+    		/* Open door after 5s */
+    		if (currentTime > openedTime + 5000){
+    			ESP_LOGI("door_button_task::", "Open door for button");
+    			my_door->open();
+    			openedTime = currentTime;
+    		}
+    	}
+    }
+}
+
 
 /**
  * @brief Main function (main FreeRTOS thread). Initialize hardware and runs the main loop.
@@ -54,16 +95,19 @@ extern "C" void app_main(void)
 	Tags tags_storage;
 	/* RFID sensor class */
 	Rdm6300 tag_sensor(9600,UART_DATA_8_BITS,UART_PARITY_DISABLE,UART_STOP_BITS_1, UART_HW_FLOWCTRL_DISABLE);
+	/* Door */
+	Door my_door;
+
+	xTaskCreate(door_button_task, "door_button_task", 2048, (void *)&my_door, 10, NULL);
 
 	while (1){
 		/* Wait for a new tag */
 		uint32_t tag = tag_sensor.WaitAndRead();
 
 		/* Check if a read tag is in permissive list */
-		if ((tag != 0) && (tags_storage.search(tag) != -1))
+		if ((tag != 0) && (tags_storage.search(tag) != -1)) {
 			ESP_LOGI("Main::", "Open door for: %lu", tag);
-
-		//ToDo: Actually needs to open a door
-
+			my_door.open();
+		}
 	}
 }
