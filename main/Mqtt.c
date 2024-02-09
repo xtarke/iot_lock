@@ -30,6 +30,9 @@ static const char *TAG = "MQTT5";
 /* Queue to stored received tasg */
 static QueueHandle_t subscribe_queue;
 
+/* Publish mutex */
+static SemaphoreHandle_t xSemaphore_publish;
+
 /* Mqtt client information */
 static esp_mqtt_client_handle_t client;
 
@@ -54,7 +57,9 @@ uint32_t get_added_tag(){
 void mqtt5_publish(const char *topic, char *msg){
 	int msg_id;
 
+	xSemaphoreTake(xSemaphore_publish, portMAX_DELAY);
 	msg_id = esp_mqtt_client_publish(client, topic, msg, 0, 0, 0);
+	xSemaphoreGive(xSemaphore_publish);
 }
 
 
@@ -302,6 +307,8 @@ void mqtt5_init(void)
 
 	/* Create a Queue to store received tag number */
 	subscribe_queue = xQueueCreate(10, sizeof( uint32_t ));
+
+	xSemaphore_publish = xSemaphoreCreateMutex();
 
 	//ESP_ERROR_CHECK(nvs_flash_init());
 	//ESP_ERROR_CHECK(esp_netif_init());
