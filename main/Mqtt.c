@@ -23,11 +23,15 @@
 #include "esp_log.h"
 #include "mqtt_client.h"
 
+#include "Mqtt.h"
 
-static const char *TAG = "MQTT5_EXAMPLE";
+static const char *TAG = "MQTT5";
 
 /* Queue to stored received tasg */
 static QueueHandle_t subscribe_queue;
+
+/* Mqtt client information */
+static esp_mqtt_client_handle_t client;
 
 /**
  * @brief Get the tag received from MQTT. Blocks until a new tag is received.
@@ -46,6 +50,12 @@ uint32_t get_added_tag(){
 	return tag;
 }
 
+
+void mqtt5_publish(const char *topic, char *msg){
+	int msg_id;
+
+	msg_id = esp_mqtt_client_publish(client, topic, msg, 0, 0, 0);
+}
 
 
 static void log_error_if_nonzero(const char *message, int error_code)
@@ -253,7 +263,7 @@ static void mqtt5_app_start(void)
 			.session.last_will.retain = true,
 	};
 
-	esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt5_cfg);
+	client = esp_mqtt_client_init(&mqtt5_cfg);
 
 	/* Set connection properties and user properties */
 	esp_mqtt5_client_set_user_property(&connect_property.user_property, user_property_arr, USE_PROPERTY_ARR_SIZE);

@@ -56,15 +56,19 @@ static void door_button_task(void* arg)
     	vTaskDelay(700 /  portTICK_PERIOD_MS);
 
     	/* Get the time in MS. */
-		TickType_t currentTime = pdTICKS_TO_MS( xTaskGetTickCount() );
+		currentTime = pdTICKS_TO_MS( xTaskGetTickCount() );
 
     	if (level){
 
-    		/* Open door after 5s */
-    		if (currentTime > openedTime + 5000){
+    		/* Re open door after 10s */
+    		if (currentTime > openedTime + 10000){
     			ESP_LOGI("door_button_task::", "Open door for button");
     			my_door->open();
     			openedTime = currentTime;
+
+    			char *string = "open";
+
+    			mqtt5_publish("lpae/button_log",string);
     		}
     	}
     }
@@ -104,10 +108,18 @@ extern "C" void app_main(void)
 		/* Wait for a new tag */
 		uint32_t tag = tag_sensor.WaitAndRead();
 
+		char string[64];
+		snprintf(string,64,"%ld",tag);
+
 		/* Check if a read tag is in permissive list */
 		if ((tag != 0) && (tags_storage.search(tag) != -1)) {
 			ESP_LOGI("Main::", "Open door for: %lu", tag);
 			my_door.open();
+
+			mqtt5_publish("lpae/tag_open",string);
+		}
+		else{
+			mqtt5_publish("lpae/tag_denied",string);
 		}
 	}
 }
