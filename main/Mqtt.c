@@ -256,7 +256,8 @@ static void mqtt5_app_start(void)
 
 	esp_mqtt_client_config_t mqtt5_cfg = {
 			.broker.address.uri = CONFIG_BROKER_URL,
-			.broker.address.port = 8883,
+			//.broker.address.port = 8883,
+			.broker.address.port = 1883,
 			.session.protocol_ver = MQTT_PROTOCOL_V_5,
 			.network.disable_auto_reconnect = true,
 			.credentials.username = CONFIG_BROKER_USER,

@@ -49,9 +49,9 @@ Uart::Uart(int baud_rate, uart_word_length_t data_bits,
 	uart_config.rx_flow_ctrl_thresh = 122;
 	uart_config.source_clk = UART_SCLK_APB;
 
-	ESP_ERROR_CHECK(uart_driver_install(UART_PORT_NUM, BUFFER_SIZE * 2, 0, 0, NULL, ESP_INTR_FLAG_IRAM));
-	ESP_ERROR_CHECK(uart_param_config(UART_PORT_NUM, &uart_config));
-	ESP_ERROR_CHECK(uart_set_pin(UART_PORT_NUM, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
+	ESP_ERROR_CHECK(uart_driver_install((uart_port_t)UART_PORT_NUM, BUFFER_SIZE * 2, 0, 0, NULL, ESP_INTR_FLAG_IRAM));
+	ESP_ERROR_CHECK(uart_param_config((uart_port_t)UART_PORT_NUM, &uart_config));
+	ESP_ERROR_CHECK(uart_set_pin((uart_port_t)UART_PORT_NUM, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 
 }
 
@@ -64,7 +64,7 @@ Uart::Uart(int baud_rate, uart_word_length_t data_bits,
  */
 int Uart::ReadBytes(uint8_t *data, uint32_t bytes_to_read){
 
-	int len = uart_read_bytes(UART_PORT_NUM, data, bytes_to_read, portMAX_DELAY / portTICK_PERIOD_MS);
+	int len = uart_read_bytes((uart_port_t)UART_PORT_NUM, data, bytes_to_read, portMAX_DELAY / portTICK_PERIOD_MS);
 
 	return len;
 }
@@ -76,5 +76,5 @@ int Uart::ReadBytes(uint8_t *data, uint32_t bytes_to_read){
  * @retval None.
  */
 void Uart::flush(){
-	uart_flush(UART_PORT_NUM);
+	uart_flush((uart_port_t)UART_PORT_NUM);
 }

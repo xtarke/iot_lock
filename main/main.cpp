@@ -66,9 +66,10 @@ static void door_button_task(void* arg)
     			my_door->open();
     			openedTime = currentTime;
 
-    			char *string = "open";
+    			char *string = "{open: 1}";
 
-    			mqtt5_publish("lpae/button_log",string);
+    			//mqtt5_publish("lpae/button_log",string);
+				mqtt5_publish("v1/devices/me/telemetry",string);
     		}
     	}
     }
@@ -116,10 +117,21 @@ extern "C" void app_main(void)
 			ESP_LOGI("Main::", "Open door for: %lu", tag);
 			my_door.open();
 
-			mqtt5_publish("lpae/tag_open",string);
+			snprintf(string,64,"{tag: %ld}",tag);
+
+			//mqtt5_publish("lpae/tag_open",string);
+			mqtt5_publish("v1/devices/me/telemetry",string);
 		}
 		else{
 			mqtt5_publish("lpae/tag_denied",string);
+			//mqtt5_publish("v1/devices/me/telemetry",string);
+
 		}
 	}
 }
+
+/*
+{ tag:  <    >}
+
+
+*/
